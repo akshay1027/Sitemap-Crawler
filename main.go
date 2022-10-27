@@ -3,6 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
+	"strings"
+	"time"
+	// "net/http"
+	// "github.com/PuerkitoBio/goquery"
 )
 
 type SeoData struct {
@@ -13,19 +18,42 @@ type SeoData struct {
 	StatusCode      int
 }
 
-type Parser interface {
-}
+// type Parser interface {
+// }
 
-type DefaultParser struct {
-}
+// type DefaultParser struct {
+// }
 
 // browser telling the website that a human being is
 // scraping the website instead of bots etc. its a signature to valid human
-type userAgents struct {
+var userAgents = []string{
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
+	"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Safari/604.1.38",
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:56.0) Gecko/20100101 Firefox/56.0",
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Safari/604.1.38",
 }
 
-func randomUserAgent() {
+func randomUserAgent() string {
+	rand.Seed(time.Now().Unix())
+	randNum := rand.Int() % len(userAgents)
+	return userAgents[randNum]
+}
 
+func isSitemap(urls []string) ([]string, []string) {
+	sitemapFiles := []string{}
+	pages := []string{}
+	for _, page := range urls {
+		foundSitemap := strings.Contains(page, "xml")
+		if foundSitemap == true {
+			fmt.Println("Found Sitemap", page)
+			sitemapFiles = append(sitemapFiles, page)
+		} else {
+			pages = append(pages, page)
+		}
+	}
+	return sitemapFiles, pages
 }
 
 // Flow:
@@ -104,7 +132,7 @@ func getSEOData() {
 
 }
 
-func extractURLs() {
+func extractURLs(url string) SeoData {
 
 }
 
