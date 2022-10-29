@@ -1,3 +1,6 @@
 - A sitemap is a file where you provide information about the pages, videos, and other files on your site, and the relationships between them. Search engines like Google read this file to crawl your site more efficiently. A sitemap tells Google which pages and files you think are important in your site, and also provides valuable information about these files. For example, when the page was last updated and any alternate language versions of the page.
 
-- (Google s sitemap)[https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview]
+- [Google link to sitemap](https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview)
+
+- why choose golang for scraping?
+    Because it provides good concurrency model. We are scrapping for a lot of links/pages and we cant wait for one page to be fully scraped and then to scrape the nexr page. So with golang, we can assign multiple goroutines to scrape pages simultaneously so that no goroutine is dependent on each other. So if a page has lot of images, videos or if its too long, our code wont be dependent on that to finish the task as we have assigned multiple goroutines.

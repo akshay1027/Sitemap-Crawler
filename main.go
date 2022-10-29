@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"net/http"
 	"strings"
 	"time"
-	// "net/http"
 	// "github.com/PuerkitoBio/goquery"
 )
 
@@ -18,11 +18,14 @@ type SeoData struct {
 	StatusCode      int
 }
 
-// type Parser interface {
-// }
+// Parser defines the parsing interface
+type Parser interface {
+	GetSEOData(resp *http.Response) (SeoData, error)
+}
 
-// type DefaultParser struct {
-// }
+// DefaultParser is en empty struct for implmenting default parser
+type DefaultParser struct {
+}
 
 // browser telling the website that a human being is
 // scraping the website instead of bots etc. its a signature to valid human
@@ -41,11 +44,17 @@ func randomUserAgent() string {
 	return userAgents[randNum]
 }
 
+// how do we know if a page is sitmap => if the page has .xml extension
 func isSitemap(urls []string) ([]string, []string) {
+	// if a sitemap is found, append it to the sitmapFiles array
 	sitemapFiles := []string{}
+
+	// if its not a sitmap, append it to the pages array
 	pages := []string{}
 	for _, page := range urls {
+		// check if a page hash .xml file
 		foundSitemap := strings.Contains(page, "xml")
+
 		if foundSitemap == true {
 			fmt.Println("Found Sitemap", page)
 			sitemapFiles = append(sitemapFiles, page)
@@ -120,8 +129,20 @@ func scrapeURLs() {
 
 }
 
-func scrapePage() {
+func scrapePage(url string) (SeoData, error) {
+	res, err := crawlPage(url)
 
+	if err != nil {
+		return SeoData{}, err
+	}
+
+	data, err = parser.getSEOData(res)
+
+	if err != nil {
+		return SeoData{}, err
+	}
+
+	return data, err
 }
 
 func crawlPage() {
